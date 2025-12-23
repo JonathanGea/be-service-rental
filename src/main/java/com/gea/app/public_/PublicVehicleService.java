@@ -105,8 +105,9 @@ public class PublicVehicleService {
         if (startDate != null && endDate != null && isVehicleAvailableForCalendar(vehicle)) {
             LocalDate cursor = startDate;
             while (!cursor.isAfter(endDate)) {
+                LocalDate current = cursor;
                 boolean rented = rentals.stream().anyMatch(rental ->
-                        !cursor.isBefore(rental.getStartDate()) && !cursor.isAfter(rental.getEndDate())
+                        !current.isBefore(rental.getStartDate()) && !current.isAfter(rental.getEndDate())
                 );
                 if (!rented) {
                     availableDates.add(cursor);

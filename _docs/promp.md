@@ -159,3 +159,7 @@ Dokumen ini memecah scope pekerjaan menjadi prompt kecil per modul agar pengerja
 - `_docs/project_overview.md`
 - `_docs/requirements_use_case.md`
 - `_docs/backend_development_standards_guidelines.md`
+
+
+temukan apa yang salah di error berikut lalu rekomendasi perbaikan lalu documentasikan di _docs/errors.md, lalu perbaiki code nya, 
+pastikan tidak error lagi dengan coba jalankan kembali jika berhasil jangan lupa kill kembali: 
