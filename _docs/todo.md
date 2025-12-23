@@ -38,7 +38,7 @@
 - [x] Implement `GET /rentals/history` (filters: vehicleId/startDate/endDate).
 
 ## Availability Calendar (Admin/Staff)
-- [ ] Implement `GET /availability/calendar` (vehicleId/startDate/endDate).
+- [x] Implement `GET /availability/calendar` (vehicleId/startDate/endDate).
 
 ## Public Landing
 - [ ] Implement `GET /public/vehicles` (filters: startDate/endDate/q/categoryId).

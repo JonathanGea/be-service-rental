@@ -29,4 +29,17 @@ public interface RentalRepository extends JpaRepository<Rental, UUID>, JpaSpecif
             @Param("endDate") LocalDate endDate,
             @Param("statuses") Collection<RentalStatus> statuses,
             @Param("excludeId") UUID excludeId);
+
+    @Query("""
+            select r from Rental r
+            where r.vehicle.id = :vehicleId
+              and r.status in :statuses
+              and r.startDate <= :endDate
+              and r.endDate >= :startDate
+            """)
+    List<Rental> findByVehicleIdAndStatusInAndDateRange(
+            @Param("vehicleId") UUID vehicleId,
+            @Param("statuses") Collection<RentalStatus> statuses,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate);
 }
