@@ -4,6 +4,7 @@ import com.gea.app.rental.entity.Rental;
 import com.gea.app.rental.enum_.RentalStatus;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -42,4 +43,15 @@ public interface RentalRepository extends JpaRepository<Rental, UUID>, JpaSpecif
             @Param("statuses") Collection<RentalStatus> statuses,
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate);
+
+    @Query("""
+            select max(r.endDate) from Rental r
+            where r.vehicle.id = :vehicleId
+              and r.status in :statuses
+              and r.endDate >= :fromDate
+            """)
+    LocalDate findMaxEndDateByVehicleIdAndStatusInAndEndDateAfter(
+            @Param("vehicleId") UUID vehicleId,
+            @Param("statuses") Collection<RentalStatus> statuses,
+            @Param("fromDate") LocalDate fromDate);
 }

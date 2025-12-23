@@ -19,9 +19,11 @@ public class RentalResponse {
     private String renterIdNumber;
     private LocalDate startDate;
     private LocalDate endDate;
+    private LocalDate returnDate;
     private String pickupLocation;
     private String returnLocation;
     private Long priceTotal;
     private String status;
     private String notes;
+    private String conditionNotes;
 }

@@ -161,7 +161,7 @@ public class PublicVehicleService {
             LocalDate endDate,
             String status) {
         if (startDate == null || endDate == null) {
-            return null;
+            return resolveNextAvailableDateWithoutRange(vehicle, status);
         }
         if (vehicle.getStatus() == VehicleStatus.MAINTENANCE || vehicle.getStatus() == VehicleStatus.UNAVAILABLE) {
             return null;
@@ -173,6 +173,20 @@ public class PublicVehicleService {
                 .map(Rental::getEndDate)
                 .max(LocalDate::compareTo);
         return lastRentalEnd.map(date -> date.plusDays(1)).orElse(startDate);
+    }
+
+    private LocalDate resolveNextAvailableDateWithoutRange(Vehicle vehicle, String status) {
+        if (vehicle.getStatus() == VehicleStatus.MAINTENANCE || vehicle.getStatus() == VehicleStatus.UNAVAILABLE) {
+            return null;
+        }
+        if (!VehicleStatus.RENTED.getValue().equals(status)) {
+            return LocalDate.now();
+        }
+        LocalDate today = LocalDate.now();
+        LocalDate lastRentalEnd = rentalRepository.findMaxEndDateByVehicleIdAndStatusInAndEndDateAfter(
+                vehicle.getId(), BLOCKING_STATUSES, today
+        );
+        return lastRentalEnd != null ? lastRentalEnd.plusDays(1) : null;
     }
 
     private String resolveThumbnail(UUID vehicleId) {

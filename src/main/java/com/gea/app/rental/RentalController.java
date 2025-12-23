@@ -3,6 +3,7 @@ package com.gea.app.rental;
 import com.gea.app.shared.model.dto.ApiResponse;
 import com.gea.app.rental.dto.RentalRequest;
 import com.gea.app.rental.dto.RentalResponse;
+import com.gea.app.rental.dto.RentalReturnRequest;
 import com.gea.app.rental.dto.RentalUpdateRequest;
 import jakarta.validation.Valid;
 import java.time.LocalDate;
@@ -70,8 +71,10 @@ public class RentalController {
     }
 
     @PostMapping("/{id}/return")
-    public ResponseEntity<ApiResponse<RentalResponse>> returnRental(@PathVariable UUID id) {
-        var data = rentalService.returnRental(id);
+    public ResponseEntity<ApiResponse<RentalResponse>> returnRental(
+            @PathVariable UUID id,
+            @Valid @RequestBody RentalReturnRequest request) {
+        var data = rentalService.returnRental(id, request);
         return ResponseEntity.ok(new ApiResponse<>(true, data));
     }
 }

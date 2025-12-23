@@ -2,6 +2,7 @@ package com.gea.app.rental;
 
 import com.gea.app.rental.dto.RentalRequest;
 import com.gea.app.rental.dto.RentalResponse;
+import com.gea.app.rental.dto.RentalReturnRequest;
 import com.gea.app.rental.dto.RentalUpdateRequest;
 import com.gea.app.rental.entity.Rental;
 import com.gea.app.rental.enum_.RentalStatus;
@@ -46,7 +47,7 @@ public class RentalService {
 
     public RentalResponse createRental(RentalRequest request) {
         Vehicle vehicle = getVehicleOrThrow(request.getVehicleId());
-        ensureVehicleNotInMaintenance(vehicle);
+        ensureVehicleAvailable(vehicle);
         validateDateRange(request.getStartDate(), request.getEndDate());
         ensureNoOverlap(vehicle.getId(), request.getStartDate(), request.getEndDate(), null);
 
@@ -173,7 +174,7 @@ public class RentalService {
         return toResponse(saved);
     }
 
-    public RentalResponse returnRental(UUID id) {
+    public RentalResponse returnRental(UUID id, RentalReturnRequest request) {
         Rental rental = getRentalOrThrow(id);
         if (rental.getStatus() == RentalStatus.COMPLETED) {
             throw new ApiException(HttpStatus.BAD_REQUEST, ApiError.builder()
@@ -181,8 +182,11 @@ public class RentalService {
                     .message("Rental sudah dikembalikan.")
                     .build());
         }
+        validateReturnDate(rental.getStartDate(), request.getReturnDate());
 
         rental.setStatus(RentalStatus.COMPLETED);
+        rental.setReturnDate(request.getReturnDate());
+        rental.setConditionNotes(request.getConditionNotes());
         Rental saved = rentalRepository.save(rental);
 
         Vehicle vehicle = rental.getVehicle();
@@ -219,12 +223,26 @@ public class RentalService {
         }
     }
 
-    private void ensureVehicleNotInMaintenance(Vehicle vehicle) {
-        if (vehicle.getStatus() == VehicleStatus.MAINTENANCE) {
+    private void ensureVehicleAvailable(Vehicle vehicle) {
+        if (vehicle.getStatus() == VehicleStatus.MAINTENANCE || vehicle.getStatus() == VehicleStatus.UNAVAILABLE) {
             throw new ApiException(HttpStatus.BAD_REQUEST, ApiError.builder()
                     .code("VALIDATION_INVALID")
-                    .message("Kendaraan sedang maintenance.")
+                    .message("Kendaraan tidak tersedia untuk disewa.")
                     .details(Map.of("status", vehicle.getStatus().getValue()))
+                    .build());
+        }
+    }
+
+    private void validateReturnDate(LocalDate startDate, LocalDate returnDate) {
+        if (returnDate == null) {
+            return;
+        }
+        if (returnDate.isBefore(startDate)) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, ApiError.builder()
+                    .code("VALIDATION_INVALID")
+                    .message("Tanggal pengembalian tidak boleh sebelum tanggal mulai.")
+                    .field("returnDate")
+                    .details(Map.of("startDate", startDate.toString(), "returnDate", returnDate.toString()))
                     .build());
         }
     }
@@ -273,11 +291,13 @@ public class RentalService {
                 rental.getRenterIdNumber(),
                 rental.getStartDate(),
                 rental.getEndDate(),
+                rental.getReturnDate(),
                 rental.getPickupLocation(),
                 rental.getReturnLocation(),
                 rental.getPriceTotal(),
                 rental.getStatus().getValue(),
-                rental.getNotes()
+                rental.getNotes(),
+                rental.getConditionNotes()
         );
     }
 }

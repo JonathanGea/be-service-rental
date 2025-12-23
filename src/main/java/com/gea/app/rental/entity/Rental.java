@@ -62,6 +62,9 @@ public class Rental {
     private LocalDate endDate;
 
     @Column
+    private LocalDate returnDate;
+
+    @Column
     private String pickupLocation;
 
     @Column
@@ -76,4 +79,7 @@ public class Rental {
 
     @Column
     private String notes;
+
+    @Column
+    private String conditionNotes;
 }
