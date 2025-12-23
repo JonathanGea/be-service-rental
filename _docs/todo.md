@@ -22,10 +22,10 @@
 - [x] Implement `PATCH /vehicles/{id}/status` with rule: only available -> maintenance; rented is system-managed.
 
 ## Vehicle Photos (Admin/Staff)
-- [ ] Implement `POST /vehicles/{id}/photos` (multipart upload).
-- [ ] Implement `GET /vehicles/{id}/photos`.
-- [ ] Implement `PATCH /vehicles/{id}/photos/{photoId}`.
-- [ ] Implement `DELETE /vehicles/{id}/photos/{photoId}`.
+- [x] Implement `POST /vehicles/{id}/photos` (multipart upload).
+- [x] Implement `GET /vehicles/{id}/photos`.
+- [x] Implement `PATCH /vehicles/{id}/photos/{photoId}`.
+- [x] Implement `DELETE /vehicles/{id}/photos/{photoId}`.
 
 ## Rentals (Admin/Staff)
 - [ ] Implement `POST /rentals` with date overlap validation.
