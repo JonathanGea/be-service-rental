@@ -28,11 +28,11 @@
 - [x] Implement `DELETE /vehicles/{id}/photos/{photoId}`.
 
 ## Rentals (Admin/Staff)
-- [ ] Implement `POST /rentals` with date overlap validation.
-- [ ] Implement `GET /rentals` with filters (vehicleId/status/startDate/endDate).
-- [ ] Implement `GET /rentals/{id}`.
-- [ ] Implement `PATCH /rentals/{id}` (policy-based update).
-- [ ] Implement `POST /rentals/{id}/return` (close rental + vehicle available).
+- [x] Implement `POST /rentals` with date overlap validation.
+- [x] Implement `GET /rentals` with filters (vehicleId/status/startDate/endDate).
+- [x] Implement `GET /rentals/{id}`.
+- [x] Implement `PATCH /rentals/{id}` (policy-based update).
+- [x] Implement `POST /rentals/{id}/return` (close rental + vehicle available).
 
 ## Rental History (Admin/Staff)
 - [ ] Implement `GET /rentals/history` (filters: vehicleId/startDate/endDate).
