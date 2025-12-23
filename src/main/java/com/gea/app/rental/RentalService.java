@@ -32,6 +32,10 @@ public class RentalService {
             RentalStatus.PENDING,
             RentalStatus.ACTIVE
     );
+    private static final Set<RentalStatus> HISTORY_STATUSES = Set.of(
+            RentalStatus.COMPLETED,
+            RentalStatus.CANCELLED
+    );
 
     private final RentalRepository rentalRepository;
     private final VehicleRepository vehicleRepository;
@@ -77,6 +81,25 @@ public class RentalService {
         }
         if (statusFilter != null) {
             spec = spec.and((root, cq, cb) -> cb.equal(root.get("status"), statusFilter));
+        }
+        if (startDate != null) {
+            spec = spec.and((root, cq, cb) -> cb.greaterThanOrEqualTo(root.get("startDate"), startDate));
+        }
+        if (endDate != null) {
+            spec = spec.and((root, cq, cb) -> cb.lessThanOrEqualTo(root.get("endDate"), endDate));
+        }
+
+        return rentalRepository.findAll(spec).stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
+    public List<RentalResponse> getRentalHistory(UUID vehicleId, LocalDate startDate, LocalDate endDate) {
+        validateDateRange(startDate, endDate);
+
+        Specification<Rental> spec = Specification.where((root, cq, cb) -> root.get("status").in(HISTORY_STATUSES));
+        if (vehicleId != null) {
+            spec = spec.and((root, cq, cb) -> cb.equal(root.get("vehicle").get("id"), vehicleId));
         }
         if (startDate != null) {
             spec = spec.and((root, cq, cb) -> cb.greaterThanOrEqualTo(root.get("startDate"), startDate));

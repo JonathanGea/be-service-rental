@@ -655,6 +655,36 @@ pm.test("response body is correct", function () {
   pm.expect(json.data).to.have.property("status");
 });
 ```
+
+### GET /rentals/history
+**Pre-request:** set Authorization header.
+
+```javascript
+pm.request.headers.upsert({
+  key: "Authorization",
+  value: "Bearer " + pm.environment.get("accessToken")
+});
+```
+
+**Post-request (Tests):**
+
+```javascript
+pm.test("status is 200", function () {
+  pm.response.to.have.status(200);
+});
+
+pm.test("response time is acceptable", function () {
+  const limit = parseInt(pm.environment.get("acceptable_limits_time"), 10) || 2000;
+  pm.expect(pm.response.responseTime).to.be.below(limit);
+});
+
+pm.test("response body is correct", function () {
+  const json = pm.response.json();
+  pm.expect(json).to.have.property("isSuccess", true);
+  pm.expect(json).to.have.property("data");
+  pm.expect(json.data).to.be.an("array");
+});
+```
 ---
 
 ## Rental History (Admin/Staff)

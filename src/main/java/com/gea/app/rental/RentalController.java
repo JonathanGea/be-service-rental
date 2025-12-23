@@ -46,6 +46,15 @@ public class RentalController {
         return ResponseEntity.ok(new ApiResponse<>(true, data));
     }
 
+    @GetMapping("/history")
+    public ResponseEntity<ApiResponse<List<RentalResponse>>> getRentalHistory(
+            @RequestParam(required = false) UUID vehicleId,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        var data = rentalService.getRentalHistory(vehicleId, startDate, endDate);
+        return ResponseEntity.ok(new ApiResponse<>(true, data));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<RentalResponse>> getRental(@PathVariable UUID id) {
         var data = rentalService.getRental(id);

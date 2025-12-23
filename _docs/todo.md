@@ -35,7 +35,7 @@
 - [x] Implement `POST /rentals/{id}/return` (close rental + vehicle available).
 
 ## Rental History (Admin/Staff)
-- [ ] Implement `GET /rentals/history` (filters: vehicleId/startDate/endDate).
+- [x] Implement `GET /rentals/history` (filters: vehicleId/startDate/endDate).
 
 ## Availability Calendar (Admin/Staff)
 - [ ] Implement `GET /availability/calendar` (vehicleId/startDate/endDate).
