@@ -14,12 +14,12 @@
 - [x] Implement `GET /users/me` (current user profile).
 
 ## Vehicles (Admin/Staff)
-- [ ] Implement `POST /vehicles`.
-- [ ] Implement `GET /vehicles` with filters (status/categoryId/q).
-- [ ] Implement `GET /vehicles/{id}`.
-- [ ] Implement `PUT /vehicles/{id}`.
-- [ ] Implement `DELETE /vehicles/{id}`.
-- [ ] Implement `PATCH /vehicles/{id}/status` with rule: only available -> maintenance; rented is system-managed.
+- [x] Implement `POST /vehicles`.
+- [x] Implement `GET /vehicles` with filters (status/categoryId/q).
+- [x] Implement `GET /vehicles/{id}`.
+- [x] Implement `PUT /vehicles/{id}`.
+- [x] Implement `DELETE /vehicles/{id}`.
+- [x] Implement `PATCH /vehicles/{id}/status` with rule: only available -> maintenance; rented is system-managed.
 
 ## Vehicle Photos (Admin/Staff)
 - [ ] Implement `POST /vehicles/{id}/photos` (multipart upload).
