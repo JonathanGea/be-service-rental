@@ -41,8 +41,8 @@
 - [x] Implement `GET /availability/calendar` (vehicleId/startDate/endDate).
 
 ## Public Landing
-- [ ] Implement `GET /public/vehicles` (filters: startDate/endDate/q/categoryId).
-- [ ] Implement `GET /public/vehicles/{id}`.
+- [x] Implement `GET /public/vehicles` (filters: startDate/endDate/q/categoryId).
+- [x] Implement `GET /public/vehicles/{id}`.
 
 ## Cross-Cutting
 - [ ] Add feature-driven packages for vehicle, rental, photo, category.
