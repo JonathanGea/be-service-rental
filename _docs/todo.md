@@ -10,8 +10,8 @@
 - [ ] Implement `POST /auth/login` (validation + UNAUTHORIZED_ACCESS error).
 
 ## Users
-- [ ] Implement `GET /users` (admin-only if needed).
-- [ ] Implement `GET /users/me` (current user profile).
+- [x] Implement `GET /users` (admin-only if needed).
+- [x] Implement `GET /users/me` (current user profile).
 
 ## Vehicles (Admin/Staff)
 - [ ] Implement `POST /vehicles`.

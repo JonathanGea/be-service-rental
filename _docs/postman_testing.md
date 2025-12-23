@@ -102,6 +102,31 @@ pm.request.headers.upsert({
 });
 ```
 
+**Post-request (Tests):**
+
+```javascript
+pm.test("status is 200", function () {
+  pm.response.to.have.status(200);
+});
+
+pm.test("response time is acceptable", function () {
+  const limit = parseInt(pm.environment.get("acceptable_limits_time"), 10) || 2000;
+  pm.expect(pm.response.responseTime).to.be.below(limit);
+});
+
+pm.test("response body is correct", function () {
+  const json = pm.response.json();
+  pm.expect(json).to.have.property("isSuccess", true);
+  pm.expect(json).to.have.property("data");
+  pm.expect(json.data).to.be.an("array");
+  if (json.data.length > 0) {
+    pm.expect(json.data[0]).to.have.property("id");
+    pm.expect(json.data[0]).to.have.property("email");
+    pm.expect(json.data[0]).to.have.property("role");
+  }
+});
+```
+
 ### GET /users/me
 **Pre-request:** set Authorization header.
 
@@ -109,6 +134,28 @@ pm.request.headers.upsert({
 pm.request.headers.upsert({
   key: "Authorization",
   value: "Bearer " + pm.environment.get("accessToken")
+});
+```
+
+**Post-request (Tests):**
+
+```javascript
+pm.test("status is 200", function () {
+  pm.response.to.have.status(200);
+});
+
+pm.test("response time is acceptable", function () {
+  const limit = parseInt(pm.environment.get("acceptable_limits_time"), 10) || 2000;
+  pm.expect(pm.response.responseTime).to.be.below(limit);
+});
+
+pm.test("response body is correct", function () {
+  const json = pm.response.json();
+  pm.expect(json).to.have.property("isSuccess", true);
+  pm.expect(json).to.have.property("data");
+  pm.expect(json.data).to.have.property("id");
+  pm.expect(json.data).to.have.property("email");
+  pm.expect(json.data).to.have.property("role");
 });
 ```
 
