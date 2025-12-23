@@ -45,7 +45,7 @@
 - [x] Implement `GET /public/vehicles/{id}`.
 
 ## Cross-Cutting
-- [ ] Add feature-driven packages for vehicle, rental, photo, category.
-- [ ] Add validation and standardized error codes for all endpoints.
-- [ ] Add logging for key actions (create/update/rental/return).
+- [x] Add feature-driven packages for vehicle, rental, photo, category.
+- [x] Add validation and standardized error codes for all endpoints.
+- [x] Add logging for key actions (create/update/rental/return).
 - [ ] Add tests for core flows (auth, rental overlap, return updates status).

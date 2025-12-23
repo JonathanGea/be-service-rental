@@ -16,6 +16,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,8 @@ import org.springframework.util.StringUtils;
 @Service
 @RequiredArgsConstructor
 public class RentalService {
+
+    private static final Logger log = LoggerFactory.getLogger(RentalService.class);
 
     private static final Set<RentalStatus> OVERLAP_STATUSES = Set.of(
             RentalStatus.PENDING,
@@ -66,6 +70,7 @@ public class RentalService {
             vehicle.setStatus(VehicleStatus.RENTED);
             vehicleRepository.save(vehicle);
         }
+        log.info("Rental created id={} vehicleId={} status={}", saved.getId(), vehicle.getId(), saved.getStatus());
         return toResponse(saved);
     }
 
@@ -164,6 +169,7 @@ public class RentalService {
         }
 
         Rental saved = rentalRepository.save(rental);
+        log.info("Rental updated id={} status={}", saved.getId(), saved.getStatus());
         return toResponse(saved);
     }
 
@@ -184,6 +190,7 @@ public class RentalService {
             vehicle.setStatus(VehicleStatus.AVAILABLE);
             vehicleRepository.save(vehicle);
         }
+        log.info("Rental returned id={} vehicleId={} status={}", saved.getId(), vehicle.getId(), saved.getStatus());
         return toResponse(saved);
     }
 

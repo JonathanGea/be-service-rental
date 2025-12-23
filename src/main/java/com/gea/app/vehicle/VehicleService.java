@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,8 @@ import org.springframework.util.StringUtils;
 @Service
 @RequiredArgsConstructor
 public class VehicleService {
+
+    private static final Logger log = LoggerFactory.getLogger(VehicleService.class);
 
     private final VehicleRepository vehicleRepository;
 
@@ -43,6 +47,7 @@ public class VehicleService {
                 .build();
 
         Vehicle saved = vehicleRepository.save(vehicle);
+        log.info("Vehicle created id={} status={}", saved.getId(), saved.getStatus());
         return toResponse(saved);
     }
 
@@ -96,12 +101,14 @@ public class VehicleService {
         vehicle.setCategoryId(request.getCategoryId());
 
         Vehicle saved = vehicleRepository.save(vehicle);
+        log.info("Vehicle updated id={} status={}", saved.getId(), saved.getStatus());
         return toResponse(saved);
     }
 
     public Map<String, Object> deleteVehicle(UUID id) {
         Vehicle vehicle = getByIdOrThrow(id);
         vehicleRepository.delete(vehicle);
+        log.info("Vehicle deleted id={}", id);
         return Map.of("deleted", true);
     }
 
@@ -113,6 +120,7 @@ public class VehicleService {
 
         vehicle.setStatus(newStatus);
         Vehicle saved = vehicleRepository.save(vehicle);
+        log.info("Vehicle status updated id={} status={}", saved.getId(), saved.getStatus());
         return toResponse(saved);
     }
 

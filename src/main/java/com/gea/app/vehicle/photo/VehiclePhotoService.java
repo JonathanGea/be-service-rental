@@ -14,6 +14,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,6 +26,8 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @RequiredArgsConstructor
 public class VehiclePhotoService {
+
+    private static final Logger log = LoggerFactory.getLogger(VehiclePhotoService.class);
 
     private static final long MAX_FILE_SIZE_BYTES = 5L * 1024 * 1024;
     private static final Set<String> ALLOWED_CONTENT_TYPES = Set.of(
@@ -60,6 +64,7 @@ public class VehiclePhotoService {
                 .build();
 
         VehiclePhoto saved = vehiclePhotoRepository.save(photo);
+        log.info("Vehicle photo uploaded id={} vehicleId={}", saved.getId(), vehicleId);
         return toResponse(saved);
     }
 
@@ -79,12 +84,14 @@ public class VehiclePhotoService {
             photo.setCaption(request.getCaption());
         }
         VehiclePhoto saved = vehiclePhotoRepository.save(photo);
+        log.info("Vehicle photo updated id={} vehicleId={}", saved.getId(), vehicleId);
         return toResponse(saved);
     }
 
     public Map<String, Object> deletePhoto(UUID vehicleId, UUID photoId) {
         VehiclePhoto photo = getPhotoOrThrow(vehicleId, photoId);
         vehiclePhotoRepository.delete(photo);
+        log.info("Vehicle photo deleted id={} vehicleId={}", photoId, vehicleId);
         return Map.of("deleted", true);
     }
 
