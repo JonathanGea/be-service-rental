@@ -13,6 +13,6 @@ public class RegisterRequest {
     @Email @NotBlank
     private String email;
 
-    @NotBlank @Size(min = 6)
+    @NotBlank @Size(min = 8)
     private String password;
 }

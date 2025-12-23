@@ -1,6 +1,7 @@
 package com.gea.app.shared.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gea.app.shared.exception.ApiError;
 import com.gea.app.shared.model.dto.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -27,10 +28,10 @@ public class RestAccessDeniedHandler implements AccessDeniedHandler {
 
         var body = new ApiResponse<>(
                 false,
-                List.of(
-                        "Forbidden: you don't have permission to access this resource",
-                        request.getMethod() + " " + request.getRequestURI()
-                )
+                List.of(ApiError.builder()
+                        .code("FORBIDDEN_ACCESS")
+                        .message("Anda tidak memiliki izin untuk mengakses resource ini.")
+                        .build())
         );
 
         objectMapper.writeValue(response.getOutputStream(), body);

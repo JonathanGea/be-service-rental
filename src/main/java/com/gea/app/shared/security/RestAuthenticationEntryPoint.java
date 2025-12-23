@@ -1,6 +1,7 @@
 package com.gea.app.shared.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gea.app.shared.exception.ApiError;
 import com.gea.app.shared.model.dto.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -27,10 +28,10 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
         var body = new ApiResponse<>(
                 false,
-                List.of(
-                        "Unauthorized: missing or invalid authentication",
-                        request.getMethod() + " " + request.getRequestURI()
-                )
+                List.of(ApiError.builder()
+                        .code("UNAUTHORIZED_ACCESS")
+                        .message("Anda tidak memiliki token otentikasi yang valid atau token telah kadaluarsa.")
+                        .build())
         );
 
         objectMapper.writeValue(response.getOutputStream(), body);

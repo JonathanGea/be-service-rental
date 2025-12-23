@@ -14,6 +14,12 @@ Dokumen ini memecah scope pekerjaan menjadi prompt kecil per modul agar pengerja
   - Validate response time is less than `{{acceptable_limits_time}}`.
   - Validate that the response body is correct.
 
+## Referensi
+- `_docs/api_specification_endpoints.md`
+- `_docs/todo.md`
+- `_docs/project_overview.md`
+- `_docs/requirements_use_case.md`
+- `_docs/backend_development_standards_guidelines.md`
 ---
 
 ## Prompt 1 - Auth
@@ -40,7 +46,7 @@ Dokumen ini memecah scope pekerjaan menjadi prompt kecil per modul agar pengerja
 - `GET /users/me`
 
 **Validasi Khusus:**
-- Auth required (admin-only jika perlu).
+- Auth required
 
 **Output:**
 - Endpoint berjalan + response standar.
