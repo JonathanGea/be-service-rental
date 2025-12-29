@@ -20,12 +20,12 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<AuthResponse>> register(@Valid @RequestBody RegisterRequest request) {
         var data = authService.register(request);
-        return ResponseEntity.ok(new ApiResponse<>(true, data));
+        return ResponseEntity.ok(ApiResponse.success(data));
     }
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<AuthResponse>> login(@Valid @RequestBody LoginRequest request) {
         var data = authService.login(request);
-        return ResponseEntity.ok(new ApiResponse<>(true, data));
+        return ResponseEntity.ok(ApiResponse.success(data));
     }
 }

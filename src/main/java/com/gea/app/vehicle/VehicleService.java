@@ -5,7 +5,9 @@ import com.gea.app.shared.exception.ApiException;
 import com.gea.app.vehicle.dto.VehicleRequest;
 import com.gea.app.vehicle.dto.VehicleResponse;
 import com.gea.app.vehicle.dto.VehicleStatusRequest;
+import com.gea.app.vehicle.entity.Brand;
 import com.gea.app.vehicle.entity.Vehicle;
+import com.gea.app.vehicle.entity.VehicleType;
 import com.gea.app.vehicle.enum_.VehicleStatus;
 import java.util.List;
 import java.util.Map;
@@ -28,22 +30,25 @@ public class VehicleService {
     private static final Logger log = LoggerFactory.getLogger(VehicleService.class);
 
     private final VehicleRepository vehicleRepository;
+    private final BrandRepository brandRepository;
+    private final VehicleTypeRepository vehicleTypeRepository;
 
     public VehicleResponse createVehicle(VehicleRequest request) {
         VehicleStatus status = parseStatusOrThrow(request.getStatus());
         validateManualStatus(status);
+        Brand brand = resolveBrand(request.getBrandId());
+        VehicleType vehicleType = resolveVehicleType(request.getVehicleTypeId());
 
         Vehicle vehicle = Vehicle.builder()
                 .name(request.getName())
-                .brand(request.getBrand())
-                .type(request.getType())
+                .brand(brand)
+                .vehicleType(vehicleType)
                 .year(request.getYear())
                 .transmission(request.getTransmission())
                 .capacity(request.getCapacity())
                 .pricePerDay(request.getPricePerDay())
                 .description(request.getDescription())
                 .status(status)
-                .categoryId(request.getCategoryId())
                 .build();
 
         Vehicle saved = vehicleRepository.save(vehicle);
@@ -51,7 +56,7 @@ public class VehicleService {
         return toResponse(saved);
     }
 
-    public List<VehicleResponse> getVehicles(String status, UUID categoryId, String query) {
+    public List<VehicleResponse> getVehicles(String status, String query) {
         VehicleStatus statusFilter = parseStatusOrNull(status);
         if (status != null && statusFilter == null) {
             throw invalidStatus(status);
@@ -61,15 +66,12 @@ public class VehicleService {
         if (statusFilter != null) {
             spec = spec.and((root, cq, cb) -> cb.equal(root.get("status"), statusFilter));
         }
-        if (categoryId != null) {
-            spec = spec.and((root, cq, cb) -> cb.equal(root.get("categoryId"), categoryId));
-        }
         if (StringUtils.hasText(query)) {
             String like = "%" + query.toLowerCase() + "%";
             spec = spec.and((root, cq, cb) -> cb.or(
                     cb.like(cb.lower(root.get("name")), like),
-                    cb.like(cb.lower(root.get("brand")), like),
-                    cb.like(cb.lower(root.get("type")), like)
+                    cb.like(cb.lower(root.get("brand").get("name")), like),
+                    cb.like(cb.lower(root.get("vehicleType").get("name")), like)
             ));
         }
 
@@ -88,17 +90,18 @@ public class VehicleService {
         VehicleStatus newStatus = parseStatusOrThrow(request.getStatus());
         validateManualStatus(newStatus);
         validateStatusTransition(vehicle.getStatus(), newStatus);
+        Brand brand = resolveBrand(request.getBrandId());
+        VehicleType vehicleType = resolveVehicleType(request.getVehicleTypeId());
 
         vehicle.setName(request.getName());
-        vehicle.setBrand(request.getBrand());
-        vehicle.setType(request.getType());
+        vehicle.setBrand(brand);
+        vehicle.setVehicleType(vehicleType);
         vehicle.setYear(request.getYear());
         vehicle.setTransmission(request.getTransmission());
         vehicle.setCapacity(request.getCapacity());
         vehicle.setPricePerDay(request.getPricePerDay());
         vehicle.setDescription(request.getDescription());
         vehicle.setStatus(newStatus);
-        vehicle.setCategoryId(request.getCategoryId());
 
         Vehicle saved = vehicleRepository.save(vehicle);
         log.info("Vehicle updated id={} status={}", saved.getId(), saved.getStatus());
@@ -137,16 +140,49 @@ public class VehicleService {
         return new VehicleResponse(
                 vehicle.getId(),
                 vehicle.getName(),
-                vehicle.getBrand(),
-                vehicle.getType(),
+                vehicle.getBrand().getId(),
+                vehicle.getBrand().getName(),
+                vehicle.getVehicleType().getId(),
+                vehicle.getVehicleType().getName(),
                 vehicle.getYear(),
                 vehicle.getTransmission(),
                 vehicle.getCapacity(),
                 vehicle.getPricePerDay(),
                 vehicle.getDescription(),
-                vehicle.getStatus().getValue(),
-                vehicle.getCategoryId()
+                vehicle.getStatus().getValue()
         );
+    }
+
+    private Brand resolveBrand(UUID brandId) {
+        if (brandId == null) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, ApiError.builder()
+                    .code("VALIDATION_BLANK")
+                    .message("Kolom 'brandId' tidak boleh kosong.")
+                    .field("brandId")
+                    .build());
+        }
+        return brandRepository.findById(brandId)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, ApiError.builder()
+                        .code("RESOURCE_NOT_FOUND")
+                        .message("Sumber daya brand dengan ID '" + brandId + "' tidak ditemukan.")
+                        .details(Map.of("resourceType", "Brand", "identifier", brandId.toString()))
+                        .build()));
+    }
+
+    private VehicleType resolveVehicleType(UUID vehicleTypeId) {
+        if (vehicleTypeId == null) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, ApiError.builder()
+                    .code("VALIDATION_BLANK")
+                    .message("Kolom 'vehicleTypeId' tidak boleh kosong.")
+                    .field("vehicleTypeId")
+                    .build());
+        }
+        return vehicleTypeRepository.findById(vehicleTypeId)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, ApiError.builder()
+                        .code("RESOURCE_NOT_FOUND")
+                        .message("Sumber daya vehicle type dengan ID '" + vehicleTypeId + "' tidak ditemukan.")
+                        .details(Map.of("resourceType", "VehicleType", "identifier", vehicleTypeId.toString()))
+                        .build()));
     }
 
     private VehicleStatus parseStatusOrThrow(String raw) {

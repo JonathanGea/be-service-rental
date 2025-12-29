@@ -15,7 +15,7 @@
 
 ## Vehicles (Admin/Staff)
 - [x] Implement `POST /vehicles`.
-- [x] Implement `GET /vehicles` with filters (status/categoryId/q).
+- [x] Implement `GET /vehicles` with filters (status/q).
 - [x] Implement `GET /vehicles/{id}`.
 - [x] Implement `PUT /vehicles/{id}`.
 - [x] Implement `DELETE /vehicles/{id}`.
@@ -41,7 +41,7 @@
 - [x] Implement `GET /availability/calendar` (vehicleId/startDate/endDate).
 
 ## Public Landing
-- [x] Implement `GET /public/vehicles` (filters: startDate/endDate/q/categoryId).
+- [x] Implement `GET /public/vehicles` (filters: startDate/endDate/q).
 - [x] Implement `GET /public/vehicles/{id}`.
 
 ## Cross-Cutting

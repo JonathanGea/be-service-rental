@@ -34,7 +34,7 @@ public class RentalController {
     @PostMapping
     public ResponseEntity<ApiResponse<RentalResponse>> createRental(@Valid @RequestBody RentalRequest request) {
         var data = rentalService.createRental(request);
-        return ResponseEntity.ok(new ApiResponse<>(true, data));
+        return ResponseEntity.ok(ApiResponse.success(data));
     }
 
     @GetMapping
@@ -44,7 +44,7 @@ public class RentalController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
         var data = rentalService.getRentals(vehicleId, status, startDate, endDate);
-        return ResponseEntity.ok(new ApiResponse<>(true, data));
+        return ResponseEntity.ok(ApiResponse.success(data));
     }
 
     @GetMapping("/history")
@@ -53,13 +53,13 @@ public class RentalController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
         var data = rentalService.getRentalHistory(vehicleId, startDate, endDate);
-        return ResponseEntity.ok(new ApiResponse<>(true, data));
+        return ResponseEntity.ok(ApiResponse.success(data));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<RentalResponse>> getRental(@PathVariable UUID id) {
         var data = rentalService.getRental(id);
-        return ResponseEntity.ok(new ApiResponse<>(true, data));
+        return ResponseEntity.ok(ApiResponse.success(data));
     }
 
     @PatchMapping("/{id}")
@@ -67,7 +67,7 @@ public class RentalController {
             @PathVariable UUID id,
             @Valid @RequestBody RentalUpdateRequest request) {
         var data = rentalService.updateRental(id, request);
-        return ResponseEntity.ok(new ApiResponse<>(true, data));
+        return ResponseEntity.ok(ApiResponse.success(data));
     }
 
     @PostMapping("/{id}/return")
@@ -75,6 +75,6 @@ public class RentalController {
             @PathVariable UUID id,
             @Valid @RequestBody RentalReturnRequest request) {
         var data = rentalService.returnRental(id, request);
-        return ResponseEntity.ok(new ApiResponse<>(true, data));
+        return ResponseEntity.ok(ApiResponse.success(data));
     }
 }

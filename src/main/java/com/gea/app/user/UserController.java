@@ -23,13 +23,13 @@ public class UserController {
     @GetMapping
     public ResponseEntity<ApiResponse<List<UserResponse>>> getUsers() {
         var data = userService.getUsers();
-        return ResponseEntity.ok(new ApiResponse<>(true, data));
+        return ResponseEntity.ok(ApiResponse.success(data));
     }
 
     // GET /api/users/me -> profil dari token JWT
     @GetMapping("/me")
     public ResponseEntity<ApiResponse<UserResponse>> me(@AuthenticationPrincipal User principal) {
         var data = userService.getMe(principal);
-        return ResponseEntity.ok(new ApiResponse<>(true, data));
+        return ResponseEntity.ok(ApiResponse.success(data));
     }
 }

@@ -48,19 +48,16 @@ public class PublicVehicleService {
     @Value("${app.whatsapp.phone:}")
     private String whatsappPhone;
 
-    public PublicVehiclesResponse getVehicles(LocalDate startDate, LocalDate endDate, String query, UUID categoryId) {
+    public PublicVehiclesResponse getVehicles(LocalDate startDate, LocalDate endDate, String query) {
         validateDateRangeIfProvided(startDate, endDate);
 
         Specification<Vehicle> spec = Specification.where(null);
-        if (categoryId != null) {
-            spec = spec.and((root, cq, cb) -> cb.equal(root.get("categoryId"), categoryId));
-        }
         if (StringUtils.hasText(query)) {
             String like = "%" + query.toLowerCase() + "%";
             spec = spec.and((root, cq, cb) -> cb.or(
                     cb.like(cb.lower(root.get("name")), like),
-                    cb.like(cb.lower(root.get("brand")), like),
-                    cb.like(cb.lower(root.get("type")), like)
+                    cb.like(cb.lower(root.get("brand").get("name")), like),
+                    cb.like(cb.lower(root.get("vehicleType").get("name")), like)
             ));
         }
 
@@ -126,8 +123,8 @@ public class PublicVehicleService {
         return new PublicVehicleDetailResponse(
                 vehicle.getId(),
                 vehicle.getName(),
-                vehicle.getBrand(),
-                vehicle.getType(),
+                vehicle.getBrand().getName(),
+                vehicle.getVehicleType().getName(),
                 vehicle.getYear(),
                 vehicle.getTransmission(),
                 vehicle.getCapacity(),

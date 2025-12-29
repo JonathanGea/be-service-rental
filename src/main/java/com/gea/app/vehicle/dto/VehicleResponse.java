@@ -12,7 +12,9 @@ import lombok.Getter;
 public class VehicleResponse {
     private UUID id;
     private String name;
+    private UUID brandId;
     private String brand;
+    private UUID vehicleTypeId;
     private String type;
     private Integer year;
     private String transmission;
@@ -20,5 +22,4 @@ public class VehicleResponse {
     private Long pricePerDay;
     private String description;
     private String status;
-    private UUID categoryId;
 }

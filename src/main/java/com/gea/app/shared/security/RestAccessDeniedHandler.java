@@ -26,13 +26,10 @@ public class RestAccessDeniedHandler implements AccessDeniedHandler {
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
-        var body = new ApiResponse<>(
-                false,
-                List.of(ApiError.builder()
-                        .code("FORBIDDEN_ACCESS")
-                        .message("Anda tidak memiliki izin untuk mengakses resource ini.")
-                        .build())
-        );
+        var body = ApiResponse.failure(List.of(ApiError.builder()
+                .code("FORBIDDEN_ACCESS")
+                .message("Anda tidak memiliki izin untuk mengakses resource ini.")
+                .build()));
 
         objectMapper.writeValue(response.getOutputStream(), body);
     }

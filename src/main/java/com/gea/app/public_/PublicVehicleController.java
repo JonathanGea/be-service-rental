@@ -28,10 +28,9 @@ public class PublicVehicleController {
     public ResponseEntity<ApiResponse<PublicVehiclesResponse>> getVehicles(
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
-            @RequestParam(required = false, name = "q") String query,
-            @RequestParam(required = false) UUID categoryId) {
-        var data = publicVehicleService.getVehicles(startDate, endDate, query, categoryId);
-        return ResponseEntity.ok(new ApiResponse<>(true, data));
+            @RequestParam(required = false, name = "q") String query) {
+        var data = publicVehicleService.getVehicles(startDate, endDate, query);
+        return ResponseEntity.ok(ApiResponse.success(data));
     }
 
     @GetMapping("/{id}")
@@ -40,6 +39,6 @@ public class PublicVehicleController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
         var data = publicVehicleService.getVehicle(id, startDate, endDate);
-        return ResponseEntity.ok(new ApiResponse<>(true, data));
+        return ResponseEntity.ok(ApiResponse.success(data));
     }
 }

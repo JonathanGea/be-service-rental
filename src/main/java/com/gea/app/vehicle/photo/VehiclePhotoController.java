@@ -37,13 +37,13 @@ public class VehiclePhotoController {
             @RequestParam("file") MultipartFile file,
             @RequestParam(value = "caption", required = false) String caption) {
         var data = vehiclePhotoService.uploadPhoto(vehicleId, file, caption);
-        return ResponseEntity.ok(new ApiResponse<>(true, data));
+        return ResponseEntity.ok(ApiResponse.success(data));
     }
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<VehiclePhotoResponse>>> listPhotos(@PathVariable("id") UUID vehicleId) {
         var data = vehiclePhotoService.listPhotos(vehicleId);
-        return ResponseEntity.ok(new ApiResponse<>(true, data));
+        return ResponseEntity.ok(ApiResponse.success(data));
     }
 
     @PatchMapping("/{photoId}")
@@ -52,7 +52,7 @@ public class VehiclePhotoController {
             @PathVariable UUID photoId,
             @Valid @RequestBody VehiclePhotoUpdateRequest request) {
         var data = vehiclePhotoService.updatePhoto(vehicleId, photoId, request);
-        return ResponseEntity.ok(new ApiResponse<>(true, data));
+        return ResponseEntity.ok(ApiResponse.success(data));
     }
 
     @DeleteMapping("/{photoId}")
@@ -60,6 +60,6 @@ public class VehiclePhotoController {
             @PathVariable("id") UUID vehicleId,
             @PathVariable UUID photoId) {
         var data = vehiclePhotoService.deletePhoto(vehicleId, photoId);
-        return ResponseEntity.ok(new ApiResponse<>(true, data));
+        return ResponseEntity.ok(ApiResponse.success(data));
     }
 }

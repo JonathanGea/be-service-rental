@@ -10,6 +10,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +26,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<ApiResponse<Object>> handleApiException(ApiException ex) {
         log.warn("API exception status={} code={}", ex.getStatus(), ex.getError() != null ? ex.getError().getCode() : null);
-        ApiResponse<Object> response = new ApiResponse<>(false, List.of(ex.getError()));
+        ApiResponse<Object> response = ApiResponse.failure(List.of(ex.getError()));
         return ResponseEntity.status(ex.getStatus()).body(response);
     }
 
@@ -37,7 +38,7 @@ public class GlobalExceptionHandler {
                 .message("Terjadi kesalahan internal yang tidak terduga. Silakan coba lagi nanti atau hubungi administrator.")
                 .details(Map.of("suggestion", "Please provide the traceId to support staff for faster assistance."))
                 .build();
-        ApiResponse<Object> response = new ApiResponse<>(false, List.of(error));
+        ApiResponse<Object> response = ApiResponse.failure(List.of(error));
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
@@ -51,7 +52,7 @@ public class GlobalExceptionHandler {
                 .map(this::mapValidationError)
                 .collect(Collectors.toList());
 
-        ApiResponse<List<ApiError>> response = new ApiResponse<>(false, errors);
+        ApiResponse<List<ApiError>> response = ApiResponse.failure(errors);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
@@ -63,7 +64,7 @@ public class GlobalExceptionHandler {
                 .message("Kolom '" + ex.getParameterName() + "' tidak boleh kosong.")
                 .field(ex.getParameterName())
                 .build();
-        ApiResponse<List<ApiError>> response = new ApiResponse<>(false, List.of(error));
+        ApiResponse<List<ApiError>> response = ApiResponse.failure(List.of(error));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
@@ -76,7 +77,7 @@ public class GlobalExceptionHandler {
                 .field(field)
                 .details(Map.of("expectedType", ex.getRequiredType() != null ? ex.getRequiredType().getSimpleName() : "unknown"))
                 .build();
-        ApiResponse<List<ApiError>> response = new ApiResponse<>(false, List.of(error));
+        ApiResponse<List<ApiError>> response = ApiResponse.failure(List.of(error));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
@@ -86,8 +87,19 @@ public class GlobalExceptionHandler {
                 .code("VALIDATION_INVALID")
                 .message("Request body tidak valid.")
                 .build();
-        ApiResponse<List<ApiError>> response = new ApiResponse<>(false, List.of(error));
+        ApiResponse<List<ApiError>> response = ApiResponse.failure(List.of(error));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ApiResponse<?>> handleMethodNotSupported(HttpRequestMethodNotSupportedException ex) {
+        ApiError error = ApiError.builder()
+                .code("METHOD_NOT_ALLOWED")
+                .message("Method '" + ex.getMethod() + "' tidak didukung untuk endpoint ini.")
+                .details(Map.of("supported", ex.getSupportedHttpMethods()))
+                .build();
+        ApiResponse<List<ApiError>> response = ApiResponse.failure(List.of(error));
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(response);
     }
 
     private ApiError mapValidationError(FieldError fieldError) {

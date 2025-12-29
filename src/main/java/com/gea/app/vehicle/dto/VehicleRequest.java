@@ -15,11 +15,11 @@ public class VehicleRequest {
     @NotBlank
     private String name;
 
-    @NotBlank
-    private String brand;
+    @NotNull
+    private UUID brandId;
 
-    @NotBlank
-    private String type;
+    @NotNull
+    private UUID vehicleTypeId;
 
     @NotNull
     @Min(1)
@@ -41,5 +41,4 @@ public class VehicleRequest {
     @NotBlank
     private String status;
 
-    private UUID categoryId;
 }

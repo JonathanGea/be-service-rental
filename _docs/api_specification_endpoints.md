@@ -107,24 +107,26 @@ Request:
 ```json
 {
   "name": "Avanza",
-  "brand": "Toyota",
-  "type": "MPV",
+  "brandId": "<UUID>",
+  "vehicleTypeId": "<UUID>",
   "year": 2022,
   "transmission": "AT",
   "capacity": 7,
   "pricePerDay": 350000,
   "description": "Unit bersih dan nyaman",
-  "status": "available",
-  "categoryId": "<UUID>"
+  "status": "available"
 }
 ```
+
+Catatan:
+- `brandId` dan `vehicleTypeId` wajib mengacu ke master data brand dan vehicle type yang sudah ada.
+- Response kendaraan akan memuat `brandId` dan `vehicleTypeId` selain nama brand/type.
 
 ### GET /vehicles
 List kendaraan (admin), bisa filter.
 
 Query params (opsional):
 - `status` = available | rented | unavailable | maintenance
-- `categoryId`
 - `q` (search)
 
 ### GET /vehicles/{id}
@@ -176,6 +178,70 @@ Request:
 
 ### DELETE /vehicles/{id}/photos/{photoId}
 Hapus foto kendaraan.
+
+---
+
+## Vehicle Brands (Admin/Staff)
+### GET /brands
+List semua brand kendaraan.
+
+### GET /brands/{id}
+Detail brand kendaraan.
+
+### POST /brands
+Tambah brand kendaraan.
+
+Request:
+```json
+{
+  "name": "Toyota"
+}
+```
+
+### PUT /brands/{id}
+Update brand kendaraan.
+
+Request:
+```json
+{
+  "name": "Daihatsu"
+}
+```
+
+Notes:
+- Nama brand harus unik (case-insensitive).
+
+---
+
+## Vehicle Types (Admin/Staff)
+### GET /vehicle-types
+List semua tipe kendaraan.
+
+### GET /vehicle-types/{id}
+Detail tipe kendaraan.
+
+### POST /vehicle-types
+Tambah tipe kendaraan.
+
+Request:
+```json
+{
+  "name": "MPV"
+}
+```
+
+### PUT /vehicle-types/{id}
+Update tipe kendaraan.
+
+Request:
+```json
+{
+  "name": "SUV"
+}
+```
+
+Notes:
+- Nama tipe harus unik (case-insensitive).
 
 ---
 
@@ -276,7 +342,6 @@ List kendaraan untuk landing page.
 Query params (opsional):
 - `startDate` / `endDate` (untuk menandai availability)
 - `q` (search)
-- `categoryId`
 
 Response data contoh (di dalam `data` ApiResponse):
 ```json

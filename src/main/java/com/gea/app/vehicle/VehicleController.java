@@ -34,22 +34,21 @@ public class VehicleController {
     @PostMapping
     public ResponseEntity<ApiResponse<VehicleResponse>> createVehicle(@Valid @RequestBody VehicleRequest request) {
         var data = vehicleService.createVehicle(request);
-        return ResponseEntity.ok(new ApiResponse<>(true, data));
+        return ResponseEntity.ok(ApiResponse.success(data));
     }
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<VehicleResponse>>> getVehicles(
             @RequestParam(required = false) String status,
-            @RequestParam(required = false) UUID categoryId,
             @RequestParam(required = false, name = "q") String query) {
-        var data = vehicleService.getVehicles(status, categoryId, query);
-        return ResponseEntity.ok(new ApiResponse<>(true, data));
+        var data = vehicleService.getVehicles(status, query);
+        return ResponseEntity.ok(ApiResponse.success(data));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<VehicleResponse>> getVehicle(@PathVariable UUID id) {
         var data = vehicleService.getVehicle(id);
-        return ResponseEntity.ok(new ApiResponse<>(true, data));
+        return ResponseEntity.ok(ApiResponse.success(data));
     }
 
     @PutMapping("/{id}")
@@ -57,13 +56,13 @@ public class VehicleController {
             @PathVariable UUID id,
             @Valid @RequestBody VehicleRequest request) {
         var data = vehicleService.updateVehicle(id, request);
-        return ResponseEntity.ok(new ApiResponse<>(true, data));
+        return ResponseEntity.ok(ApiResponse.success(data));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Map<String, Object>>> deleteVehicle(@PathVariable UUID id) {
         var data = vehicleService.deleteVehicle(id);
-        return ResponseEntity.ok(new ApiResponse<>(true, data));
+        return ResponseEntity.ok(ApiResponse.success(data));
     }
 
     @PatchMapping("/{id}/status")
@@ -71,6 +70,6 @@ public class VehicleController {
             @PathVariable UUID id,
             @Valid @RequestBody VehicleStatusRequest request) {
         var data = vehicleService.updateStatus(id, request);
-        return ResponseEntity.ok(new ApiResponse<>(true, data));
+        return ResponseEntity.ok(ApiResponse.success(data));
     }
 }

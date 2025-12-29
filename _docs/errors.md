@@ -32,6 +32,23 @@
 
 ---
 
+## 2025-12-29 - GET /brands
+
+**Error**
+- Response `data` kosong, list berada di `errors` meskipun `isSuccess=true`.
+
+**Root Cause**
+- Konstruktor `ApiResponse(boolean, List)` bentrok dengan `ApiResponse(boolean, T)` saat `T` adalah `List`,
+  sehingga payload list dianggap sebagai error.
+
+**Fix**
+- Tambahkan factory `ApiResponse.success(data)`/`ApiResponse.failure(errors)` dan gunakan di seluruh controller/handler.
+
+**Notes**
+- Semua response list (users, vehicles, rentals, photos, brands, vehicle-types) ikut terdampak sebelum perbaikan.
+
+---
+
 ## 2025-12-23 - mvn spring-boot:run
 
 **Error**

@@ -25,17 +25,26 @@ public class ApiResponse<T> {
         this.timestamp = Date.from(jakartaTime.toInstant());
     }
 
-    public ApiResponse(boolean isSuccess, T data) {
+    public ApiResponse(boolean isSuccess, T data, List<?> errors) {
         this();
         this.isSuccess = isSuccess;
         this.data = data;
-        this.errors = null;
+        this.errors = errors;
+    }
+
+    public ApiResponse(boolean isSuccess, T data) {
+        this(isSuccess, data, null);
     }
 
     public ApiResponse(boolean isSuccess, List<?> errors) {
-        this();
-        this.isSuccess = isSuccess;
-        this.errors = errors;
-        this.data = null;
+        this(isSuccess, null, errors);
+    }
+
+    public static <T> ApiResponse<T> success(T data) {
+        return new ApiResponse<>(true, data, null);
+    }
+
+    public static <T> ApiResponse<T> failure(List<?> errors) {
+        return new ApiResponse<>(false, null, errors);
     }
 }

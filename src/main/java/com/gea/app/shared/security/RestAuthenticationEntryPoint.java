@@ -26,13 +26,10 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
-        var body = new ApiResponse<>(
-                false,
-                List.of(ApiError.builder()
-                        .code("UNAUTHORIZED_ACCESS")
-                        .message("Anda tidak memiliki token otentikasi yang valid atau token telah kadaluarsa.")
-                        .build())
-        );
+        var body = ApiResponse.failure(List.of(ApiError.builder()
+                .code("UNAUTHORIZED_ACCESS")
+                .message("Anda tidak memiliki token otentikasi yang valid atau token telah kadaluarsa.")
+                .build()));
 
         objectMapper.writeValue(response.getOutputStream(), body);
     }
