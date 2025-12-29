@@ -272,15 +272,6 @@
                         }
                     },
                     {
-                        "name": "categoryId",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid"
-                        }
-                    },
-                    {
                         "name": "q",
                         "in": "query",
                         "required": false,
@@ -1019,15 +1010,6 @@
                         "schema": {
                             "type": "string"
                         }
-                    },
-                    {
-                        "name": "categoryId",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid"
-                        }
                     }
                 ],
                 "responses": {
@@ -1185,10 +1167,6 @@
                     "status": {
                         "type": "string",
                         "minLength": 1
-                    },
-                    "categoryId": {
-                        "type": "string",
-                        "format": "uuid"
                     }
                 },
                 "required": [
@@ -1231,8 +1209,16 @@
                     "name": {
                         "type": "string"
                     },
+                    "brandId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
                     "brand": {
                         "type": "string"
+                    },
+                    "vehicleTypeId": {
+                        "type": "string",
+                        "format": "uuid"
                     },
                     "type": {
                         "type": "string"
@@ -1257,10 +1243,6 @@
                     },
                     "status": {
                         "type": "string"
-                    },
-                    "categoryId": {
-                        "type": "string",
-                        "format": "uuid"
                     }
                 }
             },
