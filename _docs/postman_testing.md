@@ -28,6 +28,15 @@ pm.test("response is ApiResponse", function () {
 
 ## Auth
 ### POST /auth/register
+**Request Body (JSON):**
+
+```json
+{
+  "email": "john@example.com",
+  "password": "secret123"
+}
+```
+
 **Post-request:** simpan token untuk request berikutnya.
 
 ```javascript
@@ -59,6 +68,15 @@ pm.test("response body is correct", function () {
 ```
 
 ### POST /auth/login
+**Request Body (JSON):**
+
+```json
+{
+  "email": "john@example.com",
+  "password": "secret123"
+}
+```
+
 **Post-request:** simpan token untuk request berikutnya.
 
 ```javascript
@@ -163,6 +181,23 @@ pm.test("response body is correct", function () {
 
 ## Vehicles (Admin/Staff)
 ### POST /vehicles
+**Request Body (JSON):**
+
+```json
+{
+  "name": "Avanza",
+  "brand": "Toyota",
+  "type": "MPV",
+  "year": 2022,
+  "transmission": "AT",
+  "capacity": 7,
+  "pricePerDay": 350000,
+  "description": "Unit bersih dan nyaman",
+  "status": "available",
+  "categoryId": "<UUID>"
+}
+```
+
 **Pre-request:** set Authorization header.
 
 ```javascript
@@ -265,6 +300,23 @@ pm.test("response body is correct", function () {
 ```
 
 ### PUT /vehicles/{id}
+**Request Body (JSON):**
+
+```json
+{
+  "name": "Avanza",
+  "brand": "Toyota",
+  "type": "MPV",
+  "year": 2022,
+  "transmission": "AT",
+  "capacity": 7,
+  "pricePerDay": 350000,
+  "description": "Unit bersih dan nyaman",
+  "status": "available",
+  "categoryId": "<UUID>"
+}
+```
+
 **Pre-request:** set Authorization header.
 
 ```javascript
@@ -296,6 +348,14 @@ pm.test("response body is correct", function () {
 ```
 
 ### PATCH /vehicles/{id}/status
+**Request Body (JSON):**
+
+```json
+{
+  "status": "maintenance"
+}
+```
+
 **Pre-request:** set Authorization header.
 
 ```javascript
@@ -360,6 +420,11 @@ pm.test("response body is correct", function () {
 
 ## Vehicle Photos (Admin/Staff)
 ### POST /vehicles/{id}/photos
+**Request Body (form-data):**
+
+- `file` (type: File, required)
+- `caption` (type: Text, optional)
+
 **Pre-request:** set Authorization header + pastikan `vehicleId` tersedia.
 
 ```javascript
@@ -430,6 +495,15 @@ pm.test("response body is correct", function () {
 ```
 
 ### PATCH /vehicles/{id}/photos/{photoId}
+**Request Body (JSON):**
+
+```json
+{
+  "order": 1,
+  "caption": "Tampak depan"
+}
+```
+
 **Pre-request:** set Authorization header.
 
 ```javascript
@@ -494,6 +568,24 @@ pm.test("response body is correct", function () {
 
 ## Rentals (Admin/Staff)
 ### POST /rentals
+**Request Body (JSON):**
+
+```json
+{
+  "vehicleId": "<UUID>",
+  "renterName": "Budi",
+  "renterPhone": "08123456789",
+  "renterAddress": "Jakarta",
+  "renterIdNumber": "1234567890",
+  "startDate": "2025-11-01",
+  "endDate": "2025-11-03",
+  "pickupLocation": "Bandara",
+  "returnLocation": "Bandara",
+  "priceTotal": 1050000,
+  "notes": "Tanpa sopir"
+}
+```
+
 **Pre-request:** set Authorization header.
 
 ```javascript
@@ -595,6 +687,23 @@ pm.test("response body is correct", function () {
 ```
 
 ### PATCH /rentals/{id}
+**Request Body (JSON):**
+
+```json
+{
+  "renterName": "Budi",
+  "renterPhone": "08123456789",
+  "renterAddress": "Jakarta",
+  "renterIdNumber": "1234567890",
+  "startDate": "2025-11-01",
+  "endDate": "2025-11-03",
+  "pickupLocation": "Bandara",
+  "returnLocation": "Bandara",
+  "priceTotal": 1050000,
+  "notes": "Perpanjang 1 hari"
+}
+```
+
 **Pre-request:** set Authorization header.
 
 ```javascript
@@ -626,6 +735,15 @@ pm.test("response body is correct", function () {
 ```
 
 ### POST /rentals/{id}/return
+**Request Body (JSON):**
+
+```json
+{
+  "returnDate": "2025-11-03",
+  "conditionNotes": "Baik"
+}
+```
+
 **Pre-request:** set Authorization header.
 
 ```javascript
